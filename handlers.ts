@@ -16,6 +16,11 @@ class SubscriptionHandlerClass {
         return SubscriptionPlan.search();
     }
 
+    @CheckPermissions("subscription.view")
+    public getSubscriptionPlan(...args: HandlerArgs<undefined>): Promise<ISubscriptionPlan> {
+        return pipeTo(SubscriptionPlan.loadById, getParam("planId"))(args);
+    }
+
     @CheckPermissions("subscription.update")
     public updateSubscriptionPlan(...args: HandlerArgs<Partial<ISubscriptionPlan>>): Promise<ISubscriptionPlan> {
         return pipeTo(SubscriptionPlan.update, getParam("planId"), getBody)(args);
