@@ -1,9 +1,10 @@
 import { pipeTo } from "ts-functional";
-import { getBody, getParam } from "../core/express/extractors";
+import { getBody, getBodyParam, getParam } from "../core/express/extractors";
 import { HandlerArgs } from "../core/express/types";
 import { ISubscriptionPlan, NewSubscriptionPlan } from "../subscription-shared/types";
 import { CheckPermissions } from "../uac/permission/util";
 import { SubscriptionPlan } from "./services";
+import { IUser } from "../uac-shared/user/types";
 
 class SubscriptionHandlerClass {
     @CheckPermissions("subscription.create")
@@ -29,6 +30,16 @@ class SubscriptionHandlerClass {
     @CheckPermissions("subscription.delete")
     public removeSubscriptionPlan(...args: HandlerArgs<undefined>): Promise<null> {
         return pipeTo(SubscriptionPlan.remove, getParam("planId"))(args);
+    }
+
+    @CheckPermissions("user.update")
+    public subscribe (...args:HandlerArgs<Partial<IUser>>): Promise<any> {
+        return pipeTo(SubscriptionPlan.subscribe, getParam("userId"), getBodyParam("subscriptionId"))(args);
+    }
+
+    @CheckPermissions("user.update")
+    public unsubscribe (...args:HandlerArgs<undefined>): Promise<any> {
+        return pipeTo(SubscriptionPlan.unsubscribe, getParam("userId"))(args);
     }
 }
 

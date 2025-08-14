@@ -1,4 +1,3 @@
-import { remove } from "@core/express/util";
 import { IApiConfig } from "../core/endpoints";
 import { del, get, patch, post } from "../core/express/wrappers";
 import { SubscriptionHandler } from "./handlers";
@@ -12,5 +11,13 @@ export const apiConfig:IApiConfig = {
             PATCH: patch(SubscriptionHandler.updateSubscriptionPlan),
             DELETE: del(SubscriptionHandler.removeSubscriptionPlan),
         },
-    }
+    },
+    user: {
+        ":userId": {
+            subscription: {
+                POST: post(SubscriptionHandler.subscribe),
+                DELETE: del(SubscriptionHandler.unsubscribe),
+            }
+        }
+    },
 }
